@@ -1,0 +1,26 @@
+
+import streamlit as st
+import numpy as np
+from tensorflow.keras.models import load_model
+
+# Load the model (make sure to upload it to /content/model.h5)
+model = load_model("/content/model.h5")
+
+st.title("🩺 Diabetes Prediction App")
+
+# Input form
+glucose = st.number_input("Glucose", 0.0, 200.0)
+bmi = st.number_input("BMI", 0.0, 70.0)
+age = st.number_input("Age", 0, 100)
+insulin = st.number_input("Insulin", 0.0, 300.0)
+bp = st.number_input("Blood Pressure", 0.0, 122.0)
+skin = st.number_input("Skin Thickness", 0.0, 100.0)
+preg = st.number_input("Pregnancies", 0, 20)
+dpf = st.number_input("Diabetes Pedigree Function", 0.0, 2.5)
+
+input_data = np.array([[preg, glucose, bp, skin, insulin, bmi, dpf, age]])
+
+if st.button("Predict"):
+    prediction = model.predict(input_data)[0][0]
+    st.write("Prediction:", "Diabetic" if prediction > 0.5 else "Not Diabetic")
+    st.write(f"Confidence: {prediction:.2f}")
